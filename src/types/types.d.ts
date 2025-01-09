@@ -12,6 +12,7 @@ type InputFlags = {
   archive?: boolean;
   gallery?: boolean;
   nativeMultiImage?: boolean;
+  name?: string;
 };
 
 interface StatusResponse {

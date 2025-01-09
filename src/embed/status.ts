@@ -202,6 +202,10 @@ export const handleStatus = async (
     }
 
     if (redirectUrl) {
+      // Only append name if it's an image
+      if (/\.(png|jpe?g|gif)(\?|$)/.test(redirectUrl) && flags.name) {
+        redirectUrl = `${redirectUrl}:${flags.name}`;
+      }
       return c.redirect(redirectUrl, 302);
     }
   }

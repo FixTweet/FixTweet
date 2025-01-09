@@ -70,6 +70,26 @@ export const statusRequest = async (c: Context) => {
     flags.direct = true;
   }
 
+  /* Support redirecting to specific quality of image, like:
+  
+     https://pbs.twimg.com/media/foobar.jpg:orig
+    
+     TODO: Should we support video file like :1280x720, though it's not the offical way */
+  if (flags.direct) {
+    // check if the name is in search params, e.g. /i/status/1234567890?name=orig
+    const nameFromSearchParams = url.searchParams.get('name');
+    if (nameFromSearchParams) {
+      flags.name = nameFromSearchParams;
+    } else {
+      // check if the status ends with :<name>, e.g. /i/status/1234567890.jpg:orig
+      const matched = url.pathname.match(/\/status(?:es)?\/\d{2,20}(?:\..*?)?:(.+?)$/);
+      const nameFromUrl = matched && matched[1];
+      if (nameFromUrl) {
+        flags.name = nameFromUrl;
+      }
+    }
+  }
+
   /* TODO: Figure out what we're doing with FixTweet / FixupX branding in future */
   if (/fixup/g.test(url.href)) {
     console.log(`We're using x domain`);
